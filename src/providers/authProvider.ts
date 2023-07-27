@@ -21,9 +21,9 @@ const paramTemporaryPassword = 'p'
 const paramLocalAmplifyBoolean = 'amplify-signin-with-hostedUI'
 
 const whoami = async (): Promise<Whoami> => {
-  const session = await Auth.currentSession()
+ // const session = await Auth.currentSession()
   const conf = new Configuration()
-  conf.accessToken = session.getIdToken().getJwtToken()
+ // conf.accessToken = session.getIdToken().getJwtToken()
   const securityApi = new SecurityApi(conf)
   return securityApi
     .whoami()
@@ -59,13 +59,13 @@ const authProvider = {
   // https://marmelab.com/react-admin/Authentication.html#anatomy-of-an-authprovider
 
   login: async ({ username, password, clientMetadata }: Record<string, unknown>): Promise<void> => {
-    const user = await Auth.signIn(username as string, password as string, clientMetadata as ClientMetaData)
+  /*  const user = await Auth.signIn(username as string, password as string, clientMetadata as ClientMetaData)
     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
       const encodedUsername = encodeURIComponent(toBase64(username as string))
       const encodedPassword = encodeURIComponent(toBase64(password as string))
       window.location.replace(`/?${paramIsTemporaryPassword}=true&${paramUsername}=${encodedUsername}&${paramTemporaryPassword}=${encodedPassword}`)
       return
-    }
+    }*/
     await whoami().then(whoami => cacheWhoami(whoami))
   },
 
@@ -78,9 +78,9 @@ const authProvider = {
   checkAuth: async (): Promise<void> => {
     await whoami()
       .then(async whoami => {
-        if (!sessionStorage.getItem(bearerItem) && localStorage.getItem(paramLocalAmplifyBoolean)) {
+      //  if (!sessionStorage.getItem(bearerItem) && localStorage.getItem(paramLocalAmplifyBoolean)) {
           cacheWhoami(whoami)
-        }
+      //  }
       })
       .catch(() => {
         throw new Error('Unauthorized')
