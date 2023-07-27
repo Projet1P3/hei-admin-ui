@@ -1657,6 +1657,8 @@ components:
       properties:
         id:
           type: string
+        student_id:
+          type: string
         fileUrl:
           type: string
           example: "https://presignedurldemo.s3.eu-west-2.amazonaws.com"
@@ -1664,6 +1666,21 @@ components:
           type: integer
           example: 1
         claimsLimitDatetime:
+          type: string
+          format: date-time
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+        transcript:
+          allOf:
+            - $ref: '#/components/schemas/Transcript'
+        ref:
+          type: integer
+        createdBy:
+          type: string
+        creationDatetime:
           type: string
           format: date-time
     Claim:
