@@ -388,7 +388,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Transcript'
+                  $ref: '#/components/schemas/Version'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -431,7 +431,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transcript'
+                $ref: '#/components/schemas/Version'
         '400':
           $ref: '#/components/responses/400'
         '403':
