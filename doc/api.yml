@@ -329,7 +329,7 @@ paths:
       tags:
         - Transcripts
       summary: Get the last version of a specific transcript of a student.
-      operationId: getStudentTranscript
+      operationId: getStudentTranscriptBytId
       parameters:
         - name: student_id
           in: path
@@ -337,7 +337,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: transcript_id
+        - name: tId
           in: path
           description: Transcript identifier
           required: true
@@ -374,7 +374,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: transcript_id
+        - name: tId
           in: path
           description: Transcript identifier
           required: true
@@ -388,7 +388,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Version'
+                  $ref: '#/components/schemas/Transcript'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -405,7 +405,7 @@ paths:
       tags:
         - Transcripts
       summary: Get a specific transcript of a student in a specific version.
-      operationId: getStudentTranscriptVersion
+      operationId: getStudentTranscriptVersionByvId
       parameters:
         - name: student_id
           in: path
@@ -431,7 +431,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Version'
+                $ref: '#/components/schemas/Transcript'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -476,6 +476,49 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /students/{student_id}/transcripts/{tId}/versions/latest/raw:
+    post:
+      tags:
+        - Transcripts
+      summary: post PDF file of latest transcript version
+      operationId: postTranscriptPdfVersion
+      parameters:
+        - name: student_id
+          in: path
+          description: student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: transcript identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transcript'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -603,6 +646,12 @@ paths:
           in: path
           description: Version identifier
           required: true
+          schema:
+            type: string
+        - name: cId
+          in: path
+          required: true
+          description: Claim identifier
           schema:
             type: string
       requestBody:
@@ -1666,21 +1715,6 @@ components:
           type: integer
           example: 1
         claimsLimitDatetime:
-          type: string
-          format: date-time
-    Version:
-      type: object
-      properties:
-        id:
-          type: string
-        transcript:
-          allOf:
-            - $ref: '#/components/schemas/Transcript'
-        ref:
-          type: integer
-        createdBy:
-          type: string
-        creationDatetime:
           type: string
           format: date-time
     Claim:
