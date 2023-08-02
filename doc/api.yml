@@ -1,0 +1,1971 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: HEI Admin API
+  description: |
+    _Programmatically connect to a computer programming [school](https://hei.school)._
+    After [joining us](mailto:contact@hei.school),
+    you can get an identification token from
+    our [dev](https://dev-hei-admin.auth.eu-west-3.amazoncognito.com/oauth2/authorize?client_id=5s8cg50doahmu855rlc8fr6qmp&response_type=token&scope=email+openid&redirect_uri=https%3A%2F%2Fapi-dev.hei.school%2Fwhoami)
+    or [prod](https://prod-hei-admin.auth.eu-west-3.amazoncognito.com/oauth2/authorize?client_id=i8bg538jpfu6mqmqb61m26trd&response_type=token&scope=email+openid&redirect_uri=https%3A%2F%2Fapi-prod.hei.school%2Fwhoami)
+    authentication service.
+    Then, start playing with our system!
+
+    The implementation of our API is [publicly disclosed](https://github.com/hei-school/hei-admin-api).
+    You are welcome to try and compromise it. Happy hacking!
+
+servers:
+  - url: 'https://api-dev.hei.school'
+  - url: 'https://api-prod.hei.school'
+
+security:
+  - BearerAuth: [ ]
+
+paths:
+  '/whoami':
+    get:
+      tags:
+        - Security
+      summary: Who am I? Tells you who you are.
+      operationId: whoami
+      responses:
+        '200':
+          description: Who you are
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Whoami'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  '/ping':
+    get:
+      tags:
+        - Security
+      summary: pong
+      operationId: ping
+      responses:
+        '200':
+          description: pong
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  '/groups/{id}':
+    get:
+      tags:
+        - Teaching
+      summary: Get group by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getGroupById
+      responses:
+        '200':
+          description: The identified group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /groups:
+    get:
+      tags:
+        - Teaching
+      summary: Get all groups
+      operationId: getGroups
+      responses:
+        '200':
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Teaching
+      summary: Create new groups or update existing groups
+      description: Update groups when `id` are provided, create them otherwise.
+      operationId: createOrUpdateGroups
+      requestBody:
+        description: Groups to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Group'
+      responses:
+        '200':
+          description: The created or updated groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  '/students/{id}':
+    get:
+      tags:
+        - Users
+      summary: Get student by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getStudentById
+      responses:
+        '200':
+          description: The identified student
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /students/{student_id}/courses:
+    get:
+      tags:
+        - Users
+      summary: Get a specific student courses
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseStatus'
+          description: By default, LINKED courses are provided.
+      operationId: getStudentCoursesById
+      responses:
+        '200':
+          description: The student courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Users
+      summary: Link or unlink courses to a specific student
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: updateStudentCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateStudentCourse'
+      responses:
+        '200':
+          description: The student updated courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /students/{student_id}/grades:
+    get:
+      tags:
+        - Teaching
+      summary: Get all grades of a student in every course that had an exam.
+      operationId: getStudentGrades
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of courses with their exams and grades for the specified student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentCourseExam'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts:
+    get:
+      tags:
+        - Transcripts
+      summary: Get all transcripts of a student.
+      operationId: getStudentTranscripts
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of last version of each semester transcripts for the specified student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transcript'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts/{tId}:
+    get:
+      tags:
+        - Transcripts
+      summary: Get the last version of a specific transcript of a student.
+      operationId: getStudentTranscriptBytId
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Last version of the specified transcript of the specified student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transcript'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts/{tId}/versions:
+    get:
+      tags:
+        - Transcripts
+      summary: Get all versions of a specific transcript of a student.
+      operationId: getStudentTranscriptVersions
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of all versions of the specified transcript of the specified student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Version'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts/{tId}/versions/{vId}:
+    get:
+      tags:
+        - Transcripts
+      summary: Get a specific transcript of a student in a specific version.
+      operationId: getStudentTranscriptVersionByvId
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+        - name: vId
+          in: path
+          description: Version identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The transcript with the required version for the specified student.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts/{tId}/versions/{vId}/raw:
+    get:
+      tags:
+        - Transcripts
+      summary: Get a specific transcript of a student in a specific version in a PDF format.
+      operationId: getPDFStudentTranscriptVersion
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+        - name: vId
+          in: path
+          description: Version identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The transcript in a PDF format.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /students/{student_id}/transcripts/{tId}/versions/latest/raw:
+    post:
+      tags:
+        - Transcripts
+      summary: post PDF file of latest transcript version
+      operationId: postTranscriptPdfVersion
+      parameters:
+        - name: student_id
+          in: path
+          description: student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: transcript identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts/{tId}/versions/{vId}/claims:
+    get:
+      tags:
+        - Transcripts
+      summary: Get all claims of a specific transcript.
+      operationId: getStudentTranscriptClaims
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+        - name: vId
+          in: path
+          description: Version identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of claims of the required transcript.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Claim'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/transcripts/{tId}/versions/{vId}/claims/{cId}:
+    get:
+      tags:
+        - Transcripts
+      summary: Get the required claim of a specific transcript.
+      operationId: getStudentTranscriptClaim
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+        - name: vId
+          in: path
+          description: Version identifier
+          required: true
+          schema:
+            type: string
+        - name: cId
+          in: path
+          description: Claim identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The required claim of the transcript.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Claim'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+    put:
+      tags:
+        - Transcripts
+      summary: Create a claim for a specific transcript
+      operationId: createTranscriptClaim
+      parameters:
+        - name: student_id
+          in: path
+          description: Student identifier
+          required: true
+          schema:
+            type: string
+        - name: tId
+          in: path
+          description: Transcript identifier
+          required: true
+          schema:
+            type: string
+        - name: vId
+          in: path
+          description: Version identifier
+          required: true
+          schema:
+            type: string
+        - name: cId
+          in: path
+          required: true
+          description: Claim identifier
+          schema:
+            type: string
+      requestBody:
+        description: Groups to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Claim'
+      responses:
+        '200':
+          description: The created claim
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Claim'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students:
+    get:
+      tags:
+        - Users
+      summary: Get all students
+      operationId: getStudents
+      parameters:
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: ref
+          in: query
+          description: "Filter students by ref, case is ignored"
+          schema:
+            type: string
+        - name: first_name
+          in: query
+          description: "Filter students by first name, case is ignored"
+          schema:
+            type: string
+        - name: last_name
+          in: query
+          description: "Filter students by last name, case is ignored"
+          schema:
+            type: string
+        - name: course_id
+          in: query
+          description: "Filter students by course they are linked to"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of students, ordered by ref.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Users
+      summary: Create new students or update existing students
+      description: Update students when `id` are provided, create them otherwise.
+      operationId: createOrUpdateStudents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: The created or updated students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  '/courses/{id}':
+    get:
+      tags:
+        - Teaching
+      summary: Get course by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getCourseById
+      responses:
+        '200':
+          description: The identified course
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /courses:
+    get:
+      tags:
+        - Teaching
+      summary: Get all courses
+      operationId: getCourses
+      parameters:
+        - name: code
+          in: query
+          description: "Filter courses by code, case is ignored"
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: "Filter courses by name, case is ignored"
+          schema:
+            type: string
+        - name: credits
+          in: query
+          description: "Filter courses by credits"
+          schema:
+            type: integer
+        - name: teacher_first_name
+          in: query
+          description: "Filter courses by teacher firstname, case is ignored"
+          schema:
+            type: string
+        - name: teacher_last_name
+          in: query
+          description: "Filter courses by teacher lastname, case is ignored"
+          schema:
+            type: string
+        - name: credits_order
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseDirection'
+        - name: code_order
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseDirection'
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          description: Set value to 1 by default if null is provided
+          required: false
+        - name: page_size
+          in: query
+          description: Set value to 15 by default if null is provided
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      responses:
+        '200':
+          description: List of all courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Teaching
+      summary: Crupdate courses
+      description: Update courses when id are provided, create them otherwise.
+      operationId: crupdateCourses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CrupdateCourse'
+      responses:
+        '200':
+          description: The crupdated courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /courses/{course_id}/exams:
+    get:
+      tags:
+        - Teaching
+      summary: Get all exam infos of a specified course
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getExamsByCourseId
+      responses:
+        '200':
+          description: List of exam infos without the participants of the specified course
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExamInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Teaching
+      summary: Update exams if ID is provided, otherwise create new exams of the specified course.
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: crupdateExams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ExamInfo'
+      responses:
+        '200':
+          description: Exams infos without the students participated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExamInfo'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /courses/{course_id}/exams/{exam_id}/details:
+    get:
+      tags:
+        - Teaching
+      summary: Get exam details with the participants and their grades of the specified exam.
+      operationId: getExamDetail
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: exam_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Exam infos with the students participated and their grades
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamDetail'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /courses/{course_id}/exams/{exam_id}/grades:
+    put:
+      tags:
+        - Teaching
+      summary: Update students grades
+      operationId: crupdateStudentsGrade
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: exam_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateStudentGrade'
+      responses:
+        '200':
+          description: Exam infos with the students participated and their grades updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamDetail'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /courses/{course_id}/exams/{exam_id}/participants/{participant_id}:
+    get:
+      tags:
+        - Teaching
+      summary: Return a participant with his grade for the specified exam
+      operationId: getParticipantById
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: exam_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: participant_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The specified participant with his grade
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGrade'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/teachers/{id}':
+    get:
+      tags:
+        - Users
+      summary: Get teacher by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getTeacherById
+      responses:
+        '200':
+          description: The identified teacher
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /teachers:
+    get:
+      tags:
+        - Users
+      summary: Get all teachers
+      operationId: getTeachers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: ref
+          in: query
+          description: "Filter teachers by ref, case is ignored"
+          schema:
+            type: string
+        - name: first_name
+          in: query
+          description: "Filter teachers by first name, case is ignored"
+          schema:
+            type: string
+        - name: last_name
+          in: query
+          description: "Filter teachers by last name, case is ignored"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of teachers, ordered by ref.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Users
+      summary: Create new teachers or update existing teachers
+      description: Update teachers when `id` are provided, create them otherwise.
+      operationId: createOrUpdateTeachers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Teacher'
+      responses:
+        '200':
+          description: The created or updated teachers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/managers/{id}':
+    get:
+      tags:
+        - Users
+      summary: Get manager by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getManagerById
+      responses:
+        '200':
+          description: The identified manager
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Manager'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /managers:
+    get:
+      tags:
+        - Users
+      summary: Get all managers
+      operationId: getManagers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      responses:
+        '200':
+          description: List of managers, ordered by ref.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Manager'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /delay_penalty_change:
+    post:
+      tags:
+        - Paying
+      summary: Change current delay penalty configuration
+      operationId: createDelayPenaltyChange
+      requestBody:
+        description: Delay penalties to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDelayPenaltyChange'
+      responses:
+        '200':
+          description: List of created delay penalties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DelayPenalty'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /delay_penalty:
+    get:
+      tags:
+        - Paying
+      summary: Get current delay penalty
+      operationId: getDelayPenalty
+      responses:
+        '200':
+          description: Active delay penalty
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DelayPenalty'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /students/{student_id}/fees/{fee_id}:
+    get:
+      tags:
+        - Paying
+      summary: Get student fee by identifier
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fee_id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getStudentFeeById
+      responses:
+        '200':
+          description: Identified student fee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fee'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /students/{student_id}/fees:
+    get:
+      tags:
+        - Paying
+      summary: Get all student fees ordered by due datetime desc
+      description: Fees can be filtered with an optional payment status parameter.
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - UNPAID
+              - PAID
+              - LATE
+      operationId: getStudentFees
+      responses:
+        '200':
+          description: List of all student fees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fee'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Paying
+      summary: Create student fees
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: createStudentFees
+      requestBody:
+        description: Student fees to create
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateFee'
+      responses:
+        '200':
+          description: Created student fees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fee'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /fees:
+    get:
+      tags:
+        - Paying
+      summary: Get all student fees filtered by status
+      parameters:
+        - name: status
+          in: query
+          description: "See the PaymentStatus object for its value."
+          schema:
+            type: string
+            default: LATE
+            enum:
+              - UNPAID
+              - LATE
+              - PAID
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      operationId: getFees
+      responses:
+        '200':
+          description: List of filtered student fees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fee'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  /students/{student_id}/fees/{fee_id}/payments:
+    get:
+      tags:
+        - Paying
+      summary: Get all student payments of a specific fee. Resulting list is ordered by creation datetime desc.
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fee_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      operationId: getStudentPayments
+      responses:
+        '200':
+          description: List of all student payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Paying
+      summary: Create student payments
+      parameters:
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fee_id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: createStudentPayments
+      requestBody:
+        description: Student payments to create
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreatePayment'
+      responses:
+        '200':
+          description: Created student payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  responses:
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestException'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotAuthorizedException'
+    '404':
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceNotFoundException'
+    '429':
+      description: Too many requests to the API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TooManyRequestsException'
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerException'
+  schemas:
+    Whoami:
+      properties:
+        id:
+          type: string
+        role:
+          type: string
+          enum:
+            - STUDENT
+            - TEACHER
+            - MANAGER
+        bearer:
+          type: string
+    UserIdentifier:
+      type: object
+      properties:
+        id:
+          type: string
+        ref:
+          type: string
+          example: STD000001
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+    User:
+      allOf:
+        - $ref: '#/components/schemas/UserIdentifier'
+        - type: object
+          properties:
+            sex:
+              type: string
+              enum:
+                - M
+                - F
+            birth_date:
+              type: string
+              format: date
+            address:
+              type: string
+            phone:
+              type: string
+            entrance_datetime:
+              type: string
+              format: date-time
+            status:
+              $ref: '#/components/schemas/EnableStatus'
+    EnableStatus:
+      type: string
+      enum:
+        - ENABLED
+        - DISABLED
+    Student:
+      allOf:
+        - $ref: '#/components/schemas/User'
+    Teacher:
+      allOf:
+        - $ref: '#/components/schemas/User'
+    Manager:
+      allOf:
+        - $ref: '#/components/schemas/User'
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: The group number one
+        ref:
+          type: string
+          example: G1
+        creation_datetime:
+          type: string
+          format: date-time
+    CourseTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          example: PROG1
+        name:
+          type: string
+          example: Algorithmics
+        credits:
+          type: integer
+        total_hours:
+          type: integer
+    Transcript:
+      type: object
+      properties:
+        id:
+          type: string
+        student_id:
+          type: string
+        fileUrl:
+          type: string
+          example: "https://presignedurldemo.s3.eu-west-2.amazonaws.com"
+        semester:
+          type: integer
+          example: 1
+        claimsLimitDatetime:
+          type: string
+          format: date-time
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+        transcript:
+          allOf:
+            - $ref: '#/components/schemas/Transcript'
+        ref:
+          type: integer
+        createdBy:
+          type: string
+        creationDatetime:
+          type: string
+          format: date-time
+    Claim:
+      type: object
+      properties:
+        topic:
+          type: string
+          example: "WEB1"
+        mark:
+          type: integer
+          example: 18
+        creationDatetime:
+          type: string
+          format: date-time
+    CrupdateCourse:
+      allOf:
+        - $ref: '#/components/schemas/CourseTemplate'
+      type: object
+      properties:
+        main_teacher_id:
+          type: string
+    CourseStatus:
+      type: string
+      enum:
+        - LINKED
+        - UNLINKED
+    UpdateStudentCourse:
+      type: object
+      properties:
+        course_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/CourseStatus'
+    Course:
+      allOf:
+        - $ref: '#/components/schemas/CourseTemplate'
+        - type: object
+          properties:
+            main_teacher:
+              $ref: '#/components/schemas/Teacher'
+    Order:
+      type: string
+      enum:
+        - ASC
+        - DESC
+    ExamInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        coefficient:
+          type: integer
+        title:
+          type: string
+        examination_date:
+          type: string
+          format: date-time
+    ExamDetail:
+      allOf:
+        - $ref: '#/components/schemas/ExamInfo'
+      properties:
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentGrade'
+    Grade:
+      type: object
+      properties:
+        score:
+          type: number
+          format: double
+          example: 12.5
+        created_at:
+          type: string
+          format: date-time
+    StudentGrade:
+      allOf:
+        - $ref: '#/components/schemas/UserIdentifier'
+      type: object
+      properties:
+        grade:
+          $ref: '#/components/schemas/Grade'
+    UpdateStudentGrade:
+      type: object
+      properties:
+        student_id:
+          type: string
+        score:
+          type: number
+          format: double
+    StudentExamGrade:
+      allOf:
+        - $ref: '#/components/schemas/ExamInfo'
+      properties:
+        grade:
+          $ref: '#/components/schemas/Grade'
+    StudentCourseExam:
+      allOf:
+        - $ref: '#/components/schemas/Course'
+      properties:
+        exams:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentExamGrade'
+    CreateFee:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - TUITION
+            - HARDWARE
+        comment:
+          type: string
+        total_amount:
+          type: integer
+        creation_datetime:
+          type: string
+          format: date-time
+        due_datetime:
+          type: string
+          format: date-time
+    Fee:
+      allOf:
+        - $ref: '#/components/schemas/CreateFee'
+      type: object
+      properties:
+        id:
+          type: string
+        student_id:
+          type: string
+        remaining_amount:
+          type: integer
+        status:
+          type: string
+          enum:
+            - UNPAID
+            - PAID
+            - LATE
+        updated_at:
+          type: string
+          format: date-time
+    CreateDelayPenaltyChange:
+      type: object
+      properties:
+        interest_percent:
+          type: integer
+        interest_timerate:
+          type: string
+          enum:
+            - DAILY
+        grace_delay:
+          type: integer
+        applicability_delay_after_grace:
+          type: integer
+    DelayPenalty:
+      allOf:
+        - $ref: '#/components/schemas/CreateDelayPenaltyChange'
+      type: object
+      properties:
+        id:
+          type: string
+        creation_datetime:
+          type: string
+          format: date-time
+    CreatePayment:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - CASH
+            - MOBILE_MONEY
+            - SCHOLARSHIP
+            - FIX
+        amount:
+          type: integer
+        comment:
+          type: string
+    Payment:
+      allOf:
+        - $ref: '#/components/schemas/CreatePayment'
+      type: object
+      properties:
+        id:
+          type: string
+        fee_id:
+          type: string
+        creation_datetime:
+          type: string
+          format: date-time
+    Page:
+      type: integer
+      description: Start at `1`
+    PageSize:
+      type: integer
+      description: Cannot exceed `500`
+    CourseDirection:
+      type: string
+      enum:
+        - ASC
+        - DESC
+    Exception:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+    BadRequestException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: BadRequestException
+        message: Bad request
+    NotAuthorizedException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: NotAuthorizedException
+        message: Not authorized
+    ResourceNotFoundException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: ResourceNotFoundException
+        message: Resource of type <T> identified by <I> not found
+    TooManyRequestsException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: TooManyRequestsException
+        message: Too many requests
+    InternalServerException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: InternalServerException
+        message: Unexpected error
