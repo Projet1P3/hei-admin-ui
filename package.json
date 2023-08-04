@@ -6,15 +6,24 @@
     "@react-admin/ra-enterprise": "^6.0.3",
     "@react-admin/ra-navigation": "^4.0.6",
     "@react-admin/ra-rbac": "^4.0.1",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf/renderer": "^3.1.12",
     "aws-amplify": "^4.3.26",
+    "pdfjs-dist": "^3.9.179",
     "ra-language-french": "^4.2.0",
     "react": "^18.2.0",
     "react-admin": "^4.2.0",
     "react-dom": "^18.2.0",
+    "react-pdf": "^7.3.3",
+    "react-pdf-js": "^5.1.0",
     "react-router-redux": "^4.0.8",
     "typeface-quicksand": "^1.1.13"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
     "@cypress/code-coverage": "^3.9.12",
     "@cypress/react": "^5.12.4",
     "@cypress/webpack-dev-server": "^1.8.2",
@@ -52,5 +61,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "@react-pdf/font": "2.2.1",
+    "@react-pdf/pdfkit": "2.1.0"
   }
 }
