@@ -13,7 +13,7 @@ export const StudentMenu = (props) => {
     <Menu {...props} >
       <Menu.Item to='/profile' name='profile' primaryText='Mon profil' leftIcon={<AccountCircle />} />
       <Menu.Item to={whoamiId ? `/students/${authProvider.getCachedWhoami().id}/fees` : '/'} name='fees' primaryText='Frais' leftIcon={<AttachMoney />} />
-      <Menu.Item to='/grade' name='student-grades' primaryText='Notes' leftIcon={<Receipt />}  />
+      <Menu.Item to={whoamiId ? `/students/${authProvider.getCachedWhoami().id}/transcripts` : '/'}  name='student-grades' primaryText='Notes' leftIcon={<Receipt />}  />
     </Menu>
   )
 }
