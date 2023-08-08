@@ -1,35 +1,35 @@
 import { Show, SimpleShowLayout, TextField } from "react-admin";
 import authProvider from "../../providers/authProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { transcriptClaim, transcriptVersion } from "../../providers/transcriptProvider";
 
-const StudentGradeShow = ({ selectedItem }) => {
+const StudentGradeShow = (props) => {
+
+  
   const userId = authProvider.getCachedWhoami().id
   const [transcriptId, setTranscriptId] = useState('latest')
   const [versionId, setVersionId] = useState('latest')
   const raId = `${userId}--${transcriptId}--${versionId}`
-
-  if (!selectedItem) {
-
-    return (
-      <>
-        <Show id={raId} resource="transcripts" title='Notes'>
-          <SimpleShowLayout>
-            <TextField source="semester" label="Semestre" />
-            <TextField source="academic_year" label="Année academique" />
-          </SimpleShowLayout>
-
-        </Show>
-      </>
-  )
-  }
+ const [version, setVersion] = useState({})
+ const [claim, setClaim] = useState({})
+ useEffect(async () => {
+     const claimResult = await transcriptClaim.getOne("studentId--transcriptId--versionId--claimId");
+     setClaim(claimResult)
+ }, [])
+  useEffect(async () => {
+    const versionResult = await transcriptVersion.getOne("studentId--transcriptId--versionId");
+   setVersion(versionResult)
+   console.log(versionResult);
+}, []);
+console.log(version);
     return (
         <>
-          <Show id={selectedItem.raId} resource="transcripts" title='Notes'>
-            <SimpleShowLayout>
-              <TextField source="semester" label="Semestre" />
-              <TextField source="academic_year" label="Année academique" />
-            </SimpleShowLayout>
-          </Show>
+          <div>hello  </div>
+
+          <div>
+                    <h4>Claim</h4>
+                    <span> Status: {claim.status} </span><br />
+                </div>
         </>
     )
 }

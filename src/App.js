@@ -21,6 +21,8 @@ import studentGrades from './operations/studentGrades'
 import MyLayout from './HaLayout'
 import HaLoginPage from './security/LoginPage'
 import { mainTheme } from './haTheme'
+import StudentCreate from './operations/students/StudentCreate'
+import StudentGradeShow from './operations/studentGrades/StudentGradeShow'
 const FeeCreate = React.lazy(() => import('./operations/fees/FeesCreate'))
 const App = () => (
   <Admin
@@ -41,6 +43,7 @@ const App = () => (
     <Resource name='payments' {...payments} />
 
     <Resource name='transcripts' {...studentGrades} />
+    
 
     <CustomRoutes>
       <Route exact path='/profile' element={<profile.show />} />
@@ -61,8 +64,8 @@ const App = () => (
       <Route exact path='/fees/:feeId/payments' element={<payments.list />} />
       <Route exact path='/fees/:feeId/payments/create' element={<payments.create />} />
 
-      <Route exact path='/students/:studentsId/transcripts/:transcriptId' element={<studentGrades.show />} />
-      <Route exact path='/students/:studentsId/transcripts' element={<studentGrades.list />} />
+      <Route exact path='/students/:studentId/transcripts/:transcriptId' element={<StudentGradeShow />} />
+      <Route exact path='/students/:studentId/transcripts' element={<studentGrades.list />} />
 
     </CustomRoutes>
   </Admin>
