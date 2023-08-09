@@ -1,6 +1,6 @@
 import React from 'react'
-import { Admin } from 'react-admin'
-import { CustomRoutes, Resource } from 'react-admin'
+// import { Admin } from '@react-admin'
+import { Admin, CustomRoutes, Resource } from 'react-admin'
 
 import { Route } from 'react-router-dom'
 
@@ -64,7 +64,6 @@ const App = () => (
 
       <Route exact path='/students/:studentId/transcripts/:transcriptId' element={<studentGrades.show />} />
       <Route exact path='/students/:studentId/transcripts' element={<studentGrades.list />} />
-
     </CustomRoutes>
   </Admin>
 )

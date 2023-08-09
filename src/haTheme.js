@@ -21,75 +21,92 @@ export const mainTheme = createTheme({
       styleOverrides: {
         root: {
           marginRight: '10px',
-          background: 'white',
+          background: '#fffef5'
         }
       }
     },
-
     RaAppBar: {
       styleOverrides: {
         root: {
           '& .RaAppBar-toolbar': {
             color: 'white',
-            background: '#001948'
+            background: '#14171C'
           }
         }
       }
-
-
     },
     RaLayout: {
       styleOverrides: {
         root: {
-          background: '#f7f7f7',
-         /* position: 'relative',
-          '& .RaLayout-appFrame': {
-            '&::before': {
-              background: '#001948',
-              content: '" "',
-              
-              height: '264px',
-              left: '0',
-              position: 'absolute',
-              top: '0',
-              width: '100%',
-              zIndex: -1,
-            },
-          
-          },
-          '& .RaLayout-content': {
-            background: 'transparent',
-            color: 'white'
-          },*/
-          
-        }, 
-        
+          background: '#fffef5'
+        }
       }
     },
     RaMenu: {
       styleOverrides: {
         root: {
-          marginTop: '50px',
-          '&.RaMenu-closed': {
-          },
+          background: '#14171C',
+          height: '100%',
+          marginTop: 0,
+          position: 'fixed',
+          '&.RaMenu-closed': {},
           '&.RaMenu-open': {
-            padding: '0 15px 0 0',
+            paddingRight: '15px'
+          }
+        }
+      }
+    },
+    RaMultiLevelMenu: {
+      styleOverrides: {
+        root: {
+          background: '#14171c',
+          padding: '0 20px 0 15px',
+          color: '#fffef5',
+          marginBottom: '20px',
+          '& .RaMenuItemCategory-link': {
+            '&:hover': {
+              color: '#fffef5a3',
+              '& .MuiSvgIcon-root': {
+                color: '#fffef5a3'
+              },
+              fontWeight: '600'
+            }
           },
+          '& .RaMenuItemCategory-icon': {
+            color: '#fffef5'
+          },
+          '& .RaMenuItemCategory-active': {
+            color: '#dfa408',
+            '&:hover': {
+              color: '#fffef5a3',
+              '& .MuiSvgIcon-root': {
+                color: '#fffef5a3'
+              }
+            },
+            '& .MuiSvgIcon-root': {
+              color: '#dfa408'
+            }
+          }
         }
       }
     },
     RaMenuItemLink: {
       styleOverrides: {
         root: {
+          color: '#fffef5',
           marginBottom: '20px',
           '&:hover': {
-            color: '#001948',
-            '& .MuiSvgIcon-root': {
-              color: '#001948',
-            },
-            fontWeight: '600',
-            borderLeft: 'solid #001948 3px',
+            color: '#14171C',
+            background: '#fffef5dc',
             borderRadius: '0px 20px 20px 0px',
+            borderLeft: 'solid #dfa408 3px',
+            '& .MuiSvgIcon-root': {
+              color: '#14171C'
+            },
+            fontWeight: '600'
+          },
+          '& .RaMenuItemLink-icon': {
+            color: '#fffef5'
           },
           '&.RaMenuItemLink-active': {
             marginRight: '3px',
@@ -99,21 +116,18 @@ export const mainTheme = createTheme({
             borderLeft: 'solid #dfa408 3px',
             color: '#dfa408',
             '&:hover': {
-              color: '#001948',
+              color: '#14171C',
               '& .MuiSvgIcon-root': {
-                color: '#001948',
+                color: '#14171C'
               },
-              borderLeft: 'solid #001948 3px',
+              borderLeft: 'solid #14171C 3px'
             },
             '& .MuiSvgIcon-root': {
-              color: '#dfa408',
-            },
-          },
+              color: '#dfa408'
+            }
+          }
         }
       }
-    },
-
+    }
   }
-
-  //shadows: Array(25).fill('none')
 })
