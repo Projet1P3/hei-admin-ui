@@ -1,5 +1,5 @@
 import React from 'react'
-import { Admin } from '@react-admin/ra-enterprise'
+import { Admin } from 'react-admin'
 import { CustomRoutes, Resource } from 'react-admin'
 
 import { Route } from 'react-router-dom'
@@ -41,7 +41,7 @@ const App = () => (
     <Resource name='fees' {...fees} />
     <Resource name='payments' {...payments} />
 
-    <Resource name='student-grades' {...studentGrades} />
+    <Resource name='transcripts' {...studentGrades} />
 
     <CustomRoutes>
       <Route exact path='/profile' element={<profile.show />} />
@@ -62,7 +62,8 @@ const App = () => (
       <Route exact path='/fees/:feeId/payments' element={<payments.list />} />
       <Route exact path='/fees/:feeId/payments/create' element={<payments.create />} />
 
-      <Route exact path='/grade' element={<studentGrades.show />} />
+      <Route exact path='/students/:studentId/transcripts/:transcriptId' element={<studentGrades.show />} />
+      <Route exact path='/students/:studentId/transcripts' element={<studentGrades.list />} />
 
     </CustomRoutes>
   </Admin>

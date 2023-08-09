@@ -5,15 +5,17 @@ import studentProvider from './studentProvider'
 import feeProvider from './feeProvider'
 import paymentProvider from './paymentProvider'
 import teacherProvider from './teacherProvider'
+import { transcriptProvider } from './transcriptProvider';
 
 export const maxPageSize = 500
 
-const getProvider = (resourceType: string): HaDataProviderType => {
+const getProvider = (resourceType: string): HaDataProviderType  => {
   if (resourceType === 'profile') return profileProvider
   if (resourceType === 'students') return studentProvider
   if (resourceType === 'fees') return feeProvider
   if (resourceType === 'payments') return paymentProvider
   if (resourceType === 'teachers') return teacherProvider
+  if (resourceType === 'transcripts') return transcriptProvider
   throw new Error('Unexpected resourceType: ' + resourceType)
 }
 

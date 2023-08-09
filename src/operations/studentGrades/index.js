@@ -2,9 +2,10 @@ import { ListGuesser, EditGuesser, ShowGuesser } from 'react-admin'
 
 import { Receipt } from '@mui/icons-material'
 import { StudentGradeShow } from './StudentGradeShow'
+import { StudentGradeList } from './StudentGradeList'
 
 const studentGrades = {
-  list: ListGuesser,
+  list: StudentGradeList,
   edit: EditGuesser,
   show: StudentGradeShow,
   icon: Receipt,
