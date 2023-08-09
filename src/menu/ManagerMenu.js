@@ -14,7 +14,7 @@ export const ManagerMenu = () => (
         <Typography variant='h6' gutterBottom>
           Opérations sur les étudiants
         </Typography>
-        <MenuItemList>
+        <MenuItemList sx={{ background: '#fffef5', position: 'relative' }}>
           <MenuItemNode to='/students' name='students' label='Liste des étudiants' icon={<People />} />
           <MenuItemNode to='/fees' name='fees' label='Frais en retard' icon={<Warning />} />
         </MenuItemList>
