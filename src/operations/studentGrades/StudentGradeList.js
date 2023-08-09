@@ -12,7 +12,7 @@ const StudentGradeList = (props) => {
     return (
         <>
             <List
-                title={"List version transcript"}
+                title={"Listes des transcripts"}
                 resource="transcripts"
                 label="transcript"
                 filterDefaultValues={{ studentId: definedStudentId }}
@@ -27,8 +27,6 @@ const StudentGradeList = (props) => {
                     <FunctionField label="Détails" render={(record) => (
                         <>
                          <Link to={`/students/${definedStudentId}/transcripts/${record.id}`}>Voir les détails</Link>
-
-                        {console.log(record)}
                         </>
                                                
                     )} />
