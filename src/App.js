@@ -1,6 +1,5 @@
 import React from 'react'
-import { Admin } from '@react-admin/ra-enterprise'
-import { CustomRoutes, Resource } from 'react-admin'
+import { Admin, CustomRoutes, Resource } from 'react-admin'
 
 import { Route } from 'react-router-dom'
 
