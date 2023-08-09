@@ -1,20 +1,26 @@
-import { Title } from 'react-admin';
+import { Button, Title } from 'react-admin';
 import authProvider from "../../providers/authProvider"
 import { useEffect, useRef, useState } from "react"
-import { Box, Stack, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Typography, TextField, Chip, List, ListItem, ListItemText } from '@mui/material'
+import { Box, Stack, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Typography, TextField, Chip, List, ListItem, ListItemText, IconButton, Popover } from '@mui/material'
 
 import { useParams } from 'react-router-dom'
 import { transcriptVersion, transcriptClaim, transcriptRaw } from "../../providers/transcriptProvider"
-import { StudentTranscriptClaimStatusEnum } from "../../gen/haClient";
+import { StudentTranscriptClaimStatusEnum, WhoamiRoleEnum } from "../../gen/haClient";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Document , Page } from 'react-pdf'
+import { Send as SendIcon, MoreVertSharp } from "@mui/icons-material";
+
+import { v4 as uuidv4 } from 'uuid';
 
 export const StudentGradeShow = () => {
     const params = useParams()
     const userId = authProvider.getCachedWhoami().id
     const definedStudentId = params.studentId
     const definedTranscriptId = params.transcriptId
+    const role = authProvider.getCachedRole()
+
+    const [claimMessage, setClaimMessage] = useState("")
 
     const [versionList, setVersionList] = useState([])
     const [currentVersionId, setCurrentVersionId] = useState("latest")
@@ -42,27 +48,40 @@ export const StudentGradeShow = () => {
         doRawJob()
         doClaimJob()
     },[currentVersionId])
-    const containerRef = useRef(null);
-
 
     const handleChangeVersion = (event) => {
         setCurrentVersionId(event.target.value);
     }
 
-    const onClaim = async () => {
+    const onSubmitClaim = async () => {
         const res = await transcriptClaim.saveOrUpdate({
-            id: "",
+            id: uuidv4(),
             transcript_id: definedTranscriptId,
             transcript_version_id: currentVersionId,
             status: "OPEN",
-            creation_datetime: Date.now(),
+            creation_datetime: new Date().toISOString(),
             closed_datetime:"",
-            reason: ""
-        })
+            reason: claimMessage || ""
+        }, `${definedStudentId}--${definedTranscriptId}--${currentVersionId}--claimId`)
+        setClaimMessage("")
     }
-   
-    const raId = `${userId}--${definedTranscriptId}`;
 
+    const raId = `${userId}--${definedTranscriptId}`;
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleEdit = (id) => {
+    }
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
     return (
         <>
         <Title title="Version"/>
@@ -91,18 +110,49 @@ export const StudentGradeShow = () => {
                                 />
                             <Chip label={claim.status == StudentTranscriptClaimStatusEnum.Open ? 'ouvert': 'fermé'}
                                 color={claim.status == StudentTranscriptClaimStatusEnum.Open ? 'success': 'error'} size="small"/>
+                            <IconButton disableRipple aria-describedby={id} variant="contained" onClick={handleClick}>
+                                <MoreVertSharp/>
+                            </IconButton>
+                            <Popover
+                                id={id}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                sx={{ width: 200 }}
+                                anchorOrigin={{
+                                    vertical: 'center',
+                                    horizontal: 'left',
+                                  }}
+                                transformOrigin={{
+                                    vertical: 'center',
+                                    horizontal: 'right',
+                                  }}
+                            >
+                                <Typography>pop</Typography>
+                                <Button variant='small' fullWidth onClick={() => {handleEdit(claim.id)}}>Envoyer</Button>
+                            </Popover>
                         </ListItem>
                     ))}
                     </List>
                 </Box>
-                <Box>
-                    <TextField
-                        multiline
-                        fullWidth
-                        placeholder="La raison de votre reclamation..."
-                        size="small"
-                        />
-                </Box>
+                {role === WhoamiRoleEnum.Student && 
+                    <Box sx={{ display: "flex", m: 2, alignItems: "flex-start" }}>
+                        <TextField
+                            multiline
+                            fullWidth
+                            placeholder="Votre reclamation..."
+                            onChange={(e) => setClaimMessage(e.target.value)}
+                            value={claimMessage}
+                            size="small"
+                            />
+                        <IconButton
+                            color="primary"
+                            onClick={onSubmitClaim}
+                            disabled={claimMessage.trim()?.length <= 0}>
+                        <SendIcon />
+                        </IconButton>
+                    </Box>
+                }
             </Stack>
             
         </Stack>

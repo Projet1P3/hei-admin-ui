@@ -1,3 +1,4 @@
+import { StudentTranscriptClaim } from "src/gen/haClient";
 import { transcriptsApi } from "./api";
 import { HaDataProviderType } from "./HaDataProviderType";
 
@@ -63,10 +64,7 @@ const transcriptClaim = {
 
         const result = await transcriptsApi().getStudentTranscriptClaims(studentId, transcriptId, versionId, page, perPage);
 
-        return result.data.map((claim) => ({
-            ...claim,
-            id: filter.claimId
-        }))
+        return result.data
     },
     async getOne (raId: string) {
         const { studentId, transcriptId, versionId, claimId } = toApiIds(raId);
@@ -75,11 +73,13 @@ const transcriptClaim = {
 
         return {
             ...result.data,
-            id: raId
         }
     },
-    async saveOrUpdate () {
-        throw new Error("Not implemented")
+    async saveOrUpdate (ressource: StudentTranscriptClaim, raId: string) {
+        const { studentId, transcriptId, versionId, claimId } = toApiIds(raId);
+        const result = await transcriptsApi().putStudentClaimsOfTranscriptVersion( studentId, transcriptId, versionId, claimId, ressource)
+        
+        return result.data
     }
 }
 
