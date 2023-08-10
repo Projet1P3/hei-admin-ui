@@ -19,6 +19,7 @@ import payments from './operations/payments'
 
 import studentGrades from './operations/studentGrades'
 
+
 import MyLayout from './HaLayout'
 import HaLoginPage from './security/LoginPage'
 import { mainTheme } from './haTheme'
@@ -43,6 +44,8 @@ const App = () => (
 
     <Resource name='student-grades' {...studentGrades} />
 
+
+
     <CustomRoutes>
       <Route exact path='/profile' element={<profile.show />} />
 
@@ -63,6 +66,9 @@ const App = () => (
       <Route exact path='/fees/:feeId/payments/create' element={<payments.create />} />
 
       <Route exact path='/grade' element={<studentGrades.show />} />
+
+      <Route exact path='/students/:student_id/transcripts/:transcript_id/versions/:version_id/claims/:claim_id' element={<studentGrades.edit />} />
+
 
     </CustomRoutes>
   </Admin>

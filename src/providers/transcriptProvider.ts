@@ -11,7 +11,7 @@ const transcriptProvider: HaDataProviderType = {
     async getList (page: number, perPage: number, filter: any): Promise<any[]> {
         const result = await transcriptsApi().getStudentTranscripts(filter.studentId, page, perPage);
     
-        return result.data.map((transcript) => ({
+        return result.data.map((transcript: any) => ({
             ...transcript,
             id: filter.studentId
         }))
@@ -32,7 +32,7 @@ const transcriptVersion = {
         const { studentId, transcriptId } = toApiIds(filter.versionId);
 
         const result = await transcriptsApi().getTranscriptsVersions(studentId, transcriptId, page, perPage);
-        return result.data.map((version) => ({
+        return result.data.map((version: any) => ({
             ...version,
             id: filter.versionId
         }))
@@ -53,7 +53,7 @@ const transcriptClaim = {
         const { studentId, transcriptId, versionId } = toApiIds(filter.claimId);
 
         const result = await transcriptsApi().getStudentTranscriptClaims(studentId,transcriptId, versionId, page, perPage);
-        return result.data.map((claim) => ({
+        return result.data.map((claim: any) => ({
             ...claim,
             id: filter.claimId
         }))
