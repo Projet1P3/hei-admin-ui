@@ -1,6 +1,6 @@
 import { Button, Title } from 'react-admin'
 import authProvider from '../../providers/authProvider'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Box,
   Stack,
@@ -24,14 +24,11 @@ import { transcriptVersion, transcriptClaim, transcriptRaw } from '../../provide
 import { StudentTranscriptClaimStatusEnum, WhoamiRoleEnum } from '../../gen/haClient'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-
-import { Document, Page } from 'react-pdf'
 import { Send as SendIcon, MoreVertSharp } from '@mui/icons-material'
-
-import UploadVersion from './UploadVersion'
 
 import { v4 as uuidv4 } from 'uuid'
 import { PdfViewer } from '../utils'
+import UploadVersion from './UploadVersion'
 
 export const StudentGradeShow = () => {
   const params = useParams()
@@ -108,7 +105,7 @@ export const StudentGradeShow = () => {
       <Title title='Version' />
       <Stack direction={'row'} sx={{ p: 2 }} fullWidth alignItems={'space-between'} justifyContent={'space-between'}>
         <Stack direction={'column'}>
-          <FormControl fullWidth size='small'>
+          <FormControl fullWidth>
             <InputLabel id='demo-dialog-select-label'>Version</InputLabel>
             <Select
               labelId='demo-dialog-select-label'
@@ -122,7 +119,7 @@ export const StudentGradeShow = () => {
               ))}
             </Select>
           </FormControl>
-          <Box maxHeight={500} sx={{ overflowY: 'scroll' }}>
+          <Box>
             <Typography component='b'>Liste des réclamations</Typography>
             <List>
               {claimList.map(claim => (
@@ -182,8 +179,8 @@ export const StudentGradeShow = () => {
             </Box>
           )}
         </Stack>
-        <Stack>{role === WhoamiRoleEnum.Manager && <UploadVersion studentId={definedStudentId} transcriptId={definedTranscriptId} />}</Stack>
         <Box>
+            {role === WhoamiRoleEnum.Manager && <UploadVersion studentId={definedStudentId} transcriptId={definedTranscriptId}/>}
           <PdfViewer url={currentPDF} />
         </Box>
       </Stack>
