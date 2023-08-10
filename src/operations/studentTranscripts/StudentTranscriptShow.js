@@ -124,7 +124,7 @@ export const StudentTranscriptShow = () => {
             <Typography component='b'>Liste des réclamations</Typography>
             <List>
               {claimList.map(claim => (
-                <ListItem>
+                <ListItem sx={{ border: '1px solid rgba(0,0,0,0.1)', mb: 1}}>
                   <ListItemText primary={claim.reason} secondary={format(new Date(claim.creation_datetime), 'dd MMMM yyyy', { locale: fr })} />
                   <Chip
                     label={claim.status == StudentTranscriptClaimStatusEnum.Open ? 'ouvert' : 'fermé'}
