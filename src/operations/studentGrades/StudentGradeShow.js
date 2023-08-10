@@ -24,11 +24,14 @@ import { transcriptVersion, transcriptClaim, transcriptRaw } from '../../provide
 import { StudentTranscriptClaimStatusEnum, WhoamiRoleEnum } from '../../gen/haClient'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+
 import { Document, Page } from 'react-pdf'
 import { Send as SendIcon, MoreVertSharp } from '@mui/icons-material'
 
-import { v4 as uuidv4 } from 'uuid'
 import UploadVersion from './UploadVersion'
+
+import { v4 as uuidv4 } from 'uuid'
+import { PdfViewer } from '../utils'
 
 export const StudentGradeShow = () => {
   const params = useParams()
@@ -58,9 +61,8 @@ export const StudentGradeShow = () => {
       const res = await transcriptClaim.getList(1, 1, { claimId: `${definedStudentId}--${definedTranscriptId}--${currentVersionId}` })
       setClaimList(res)
     }
-    const doRawJob = async () => {
-      const res = await transcriptRaw.getOne(`${definedStudentId}--${definedTranscriptId}--${currentVersionId}`)
-      setCurrentPDF(res)
+    const doRawJob = () => {
+      setCurrentPDF(`${process.env.REACT_APP_API_URL}/students/${definedStudentId}/transcripts/${definedTranscriptId}/versions/${currentVersionId}/raw`)
     }
     doRawJob()
     doClaimJob()
@@ -181,6 +183,9 @@ export const StudentGradeShow = () => {
           )}
         </Stack>
         <Stack>{role === WhoamiRoleEnum.Manager && <UploadVersion studentId={definedStudentId} transcriptId={definedTranscriptId} />}</Stack>
+        <Box>
+          <PdfViewer url={currentPDF} />
+        </Box>
       </Stack>
     </>
   )
