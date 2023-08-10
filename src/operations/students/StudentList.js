@@ -13,7 +13,7 @@ const CustomFunctionField = ({ record }) => {
   };
 
   return (
-    <Button label="transcript" onClick={handleClick} component={Link} to={`/students/${record.id}/transcripts`}>
+    <Button label="relevés" onClick={handleClick} component={Link} to={`/students/${record.id}/transcripts`}>
       <Receipt />
     </Button>
   );

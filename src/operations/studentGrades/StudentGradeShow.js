@@ -70,6 +70,7 @@ export const StudentGradeShow = () => {
   }
 
   const onSubmitClaim = async () => {
+    const newUUID = uuidv4()
     const res = await transcriptClaim.saveOrUpdate(
       {
         id: uuidv4(),
@@ -80,7 +81,7 @@ export const StudentGradeShow = () => {
         closed_datetime: '',
         reason: claimMessage || ''
       },
-      `${definedStudentId}--${definedTranscriptId}--${currentVersionId}--claimId`
+      `${definedStudentId}--${definedTranscriptId}--${currentVersionId}--${newUUID}`
     )
     setClaimMessage('')
   }
@@ -105,7 +106,7 @@ export const StudentGradeShow = () => {
       <Title title='Version' />
       <Stack direction={'row'} sx={{ p: 2 }} fullWidth alignItems={'space-between'} justifyContent={'space-between'}>
         <Stack direction={'column'}>
-          <FormControl fullWidth>
+          <FormControl fullWidth  size='small'>
             <InputLabel id='demo-dialog-select-label'>Version</InputLabel>
             <Select
               labelId='demo-dialog-select-label'
