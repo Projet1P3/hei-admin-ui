@@ -1,13 +1,11 @@
 import { ListGuesser, EditGuesser, ShowGuesser } from 'react-admin'
 
 import { Receipt } from '@mui/icons-material'
-import { StudentGradeShow } from './StudentGradeShow'
-import { StudentGradeList } from './StudentGradeList'
 
 const studentGrades = {
-  list: StudentGradeList,
+  list: ListGuesser,
   edit: EditGuesser,
-  show: StudentGradeShow,
+  show: ShowGuesser,
   icon: Receipt,
   options: { label: 'Notes' }
 }

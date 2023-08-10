@@ -17,7 +17,7 @@ const CustomFunctionField = ({ record }) => {
       <Button label="details" onClick={handleClick} component={Link} to={`/students/${definedStudentId}/transcripts/${record.id}`} />
     );
   };
-const StudentGradeList = () => {
+const StudentTranscriptList = () => {
     const params = useParams()
     const definedStudentId = params.studentId
 
@@ -45,4 +45,4 @@ const StudentGradeList = () => {
   )
 }
 
-export { StudentGradeList }
+export { StudentTranscriptList }

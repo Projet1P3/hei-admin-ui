@@ -30,7 +30,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { PdfViewer } from '../utils'
 import UploadVersion from './UploadVersion'
 
-export const StudentGradeShow = () => {
+export const StudentTranscriptShow = () => {
   const params = useParams()
   const userId = authProvider.getCachedWhoami().id
   const definedStudentId = params.studentId
@@ -189,4 +189,4 @@ export const StudentGradeShow = () => {
   )
 }
 
-export default StudentGradeShow
+export default StudentTranscriptShow
